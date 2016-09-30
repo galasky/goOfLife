@@ -2,13 +2,14 @@ package main
 
 import (
 	"github.com/ajhager/engi"
-//	"time"
+	"time"
 //	"fmt"
 )
 
 var (
 	Scale = float32(1)
-	Size = 100
+	Size = 250
+	Swich = false
 	)
 
 
@@ -61,14 +62,27 @@ func (game *Game) Preload() {
 	game.Map.data[Size / 2 + 2][Size / 2] = true
 
 	
-	//go game.Update()
+	go game.Fuck()
 
+}
+
+func (game *Game) Fuck() {
+	game.Map.data[Size / 2][Size / 2] = true
+	game.Map.data[Size / 2][Size / 2 + 1] = true
+	game.Map.data[Size / 2][Size / 2 - 1] = true
+	game.Map.data[Size / 2 + 1][Size / 2] = true
+	game.Map.data[Size / 2 + 2][Size / 2] = true
+	time.Sleep(1 * time.Second)
+	game.Fuck()
 }
 
 func (game *Game) Update(delta float32) {
 	if (game.play) {
 		game.AlgoGameOfLife()
-		//time.Sleep(200 * time.Millisecond)
+		if (Swich) {
+			time.Sleep(200 * time.Millisecond)
+		}
+		
 	}
 }
 
@@ -113,11 +127,11 @@ func (game *Game) AlgoGameOfLife() {
 	for y, value := range game.Map.data {
 		for x, state := range value {
 			if state {
-				if !(game.Map.info[y][x] == 2 || game.Map.info[y][x] == 3) {
+				if !(game.Map.info[y][x] == 2 || game.Map.info[y][x] == 3 || (Swich && game.Map.info[y][x] == 4)) {
 					game.Map.data[y][x] = false
 				}
 			} else {
-				if game.Map.info[y][x] == 3 {
+				if game.Map.info[y][x] == 3 || (Swich && game.Map.info[y][x] == 2) {
 					game.Map.data[y][x] = true
 				}
 			}
@@ -185,6 +199,8 @@ func (game *Game) Key(key engi.Key, modifier engi.Modifier, action engi.Action) 
 	if (action == engi.PRESS || action == engi.REPEAT) {
 		if (key == engi.Space) {
 			game.play = !game.play
+		} else if key == engi.S {
+			Swich = !Swich
 		}
 	}
 
