@@ -8,7 +8,7 @@ import (
 
 var (
 	Scale = float32(1)
-	Size = 250
+	Size = 40
 	Swich = false
 	)
 
@@ -53,7 +53,7 @@ func (game *Game) Preload() {
 	for i, _ := range game.Map.info {
 		game.Map.info[i] = make([]int, Size)
 	}
-	game.play = false
+	game.play = true
 
 	game.Map.data[Size / 2][Size / 2] = true
 	game.Map.data[Size / 2][Size / 2 + 1] = true
@@ -159,7 +159,7 @@ func (game *Game) Render() {
 			}
 		}
 	}
-	game.font.Print(game.batch, "Game of Life", game.pointDisplay.x, game.pointDisplay.y, 0xffffff)
+	game.font.Print(game.batch, "Game of Life", game.pointDisplay.x, game.pointDisplay.y, 0xff0000)
 	game.batch.End()
 
 }
@@ -214,5 +214,5 @@ func main() {
 
 	game := Game{}
 
-	engi.Open("Hello", 800, 600, false, &game)
+	engi.Open("Hello", 800, 600, true, &game)
 }
